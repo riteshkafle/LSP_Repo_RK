@@ -29,25 +29,25 @@ public class StreamingServiceDriver {
         
         // Test Audiobook
         System.out.println("Testing Audiobook:");
-        audiobook.play();   // Expected Output: "Playing audiobook: A Promised Land – Barack Obama"
-        audiobook.pause();  // Expected Output: "Paused audiobook: A Promised Land – Barack Obama"
-        audiobook.stop();   // Expected Output: "Stopped audiobook: A Promised Land – Barack Obama"
+        audiobook.play();   
+        audiobook.pause();  
+        audiobook.stop();   
         System.out.println();
         
         // Test unique behaviors for each media type
         // Test Movie-specific behavior (rewind)
-        Movie movieWithRewind = (Movie) movie;  // Cast to Movie for specific method
-        movieWithRewind.rewind(30);  // Expected Output: "Rewinding movie: Avengers End Game by 30 minutes"
+        Movie movieWithRewind = (Movie) movie; 
+        movieWithRewind.rewind(30);  
         System.out.println();
         
         // Test Audiobook-specific behavior (setPlaybackSpeed)
-        Audiobook audiobookWithSpeed = (Audiobook) audiobook;  // Cast to Audiobook for specific method
-        audiobookWithSpeed.setPlaybackSpeed(1.5);  // Expected Output: "Setting playback speed of audiobook: A Promised Land – Barack Obama 1.5x"
+        Audiobook audiobookWithSpeed = (Audiobook) audiobook;  
+        audiobookWithSpeed.setPlaybackSpeed(1.5); 
         System.out.println();
         
         // Test Music-specific behavior (addToPlaylist)
         Music musicWithPlaylist = (Music) music;  // Cast to Music for specific method
-        musicWithPlaylist.addToPlaylist("Favorites");  // Expected Output: "Added Still a Friend - Incognito to Favorites playlist"
+        musicWithPlaylist.addToPlaylist("Favorites");  
         System.out.println();
     }
 }
