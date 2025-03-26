@@ -21,7 +21,7 @@ public class VotingMachineTest {
         boolean success = vm.castVote("Eve");
         System.out.println("Vote for Eve successful? " + success);
 
-        // Displaying results
+        //  results
         System.out.println("Winner: " + vm.getWinner());
     }
 }

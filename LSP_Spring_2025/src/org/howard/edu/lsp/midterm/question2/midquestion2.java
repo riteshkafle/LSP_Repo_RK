@@ -1,6 +1,6 @@
 package org.howard.edu.lsp.midterm.question2;
 
-public class midquestion2 {
+public class Book {
 
 
     private String title;
@@ -16,7 +16,7 @@ public class midquestion2 {
      * @param ISBN the ISBN number of the book.
      * @param yearPublished the year the book was published.
      */
-    public midquestion2(String title, String author, String ISBN, int yearPublished) {
+    public Book(String title, String author, String ISBN, int yearPublished) {
         this.title = title;
         this.author = author;
         this.ISBN = ISBN;

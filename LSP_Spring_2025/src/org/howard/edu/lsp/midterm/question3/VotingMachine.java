@@ -40,7 +40,7 @@ public class VotingMachine {
     }
     
     /**
-     * Determines the winner of the election based on the votes.
+     * Determines winner of the election based on  votes.
      *
      * @return a formatted string showing the winning candidate and their vote count,
      *         e.g. "Charlie WINS with 3 votes!!". If no candidates exist, returns a message indicating so.

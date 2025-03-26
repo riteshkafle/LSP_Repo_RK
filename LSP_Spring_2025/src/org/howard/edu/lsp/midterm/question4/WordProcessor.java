@@ -5,13 +5,13 @@ import java.util.List;
 
 /**
  * The WordProcessor class processes a sentence and returns all the longest words.
- * It assumes that the input does not include punctuation.
+ *  assumes that the input does not include punctuation.
  */
 public class WordProcessor {
     private String sentence; // Stores the sentence to be processed
 
     /**
-     * Constructs a WordProcessor with the given sentence.
+     * Constructs a WordProcessor given sentence.
      * 
      * @param sentence the sentence to process.
      */
@@ -21,8 +21,8 @@ public class WordProcessor {
 
     /**
      * Finds and returns all words with the maximum length in the order they appear in the sentence.
-     * It handles varying amounts of whitespace between words.
-     * If the input is empty or contains no words, it returns an empty list.
+     *  handles varying amounts of whitespace between words.
+     * if input is empty or contains no words, it returns an empty list.
      *
      * @return a List of Strings containing the longest words.
      */

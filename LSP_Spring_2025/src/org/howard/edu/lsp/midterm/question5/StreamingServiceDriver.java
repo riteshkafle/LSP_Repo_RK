@@ -47,7 +47,7 @@ public class StreamingServiceDriver {
         
         // Test Music-specific behavior (addToPlaylist)
         Music musicWithPlaylist = (Music) music;  // Cast to Music for specific method
-        musicWithPlaylist.addToPlaylist("Favorites");  
+        musicWithPlaylist.addToPlaylist("Favorites");   
         System.out.println();
     }
 }
