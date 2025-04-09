@@ -84,7 +84,7 @@ public class IntegerSet {
      * Returns the largest item in the set.
      *
      * @return The largest integer in the set.
-     * @throws NoSuchElementException if the set is empty.
+     * @throws IntegerSetException if the set is empty.
      */
     public int largest() throws IntegerSetException {
         if (set.isEmpty()) {
@@ -103,7 +103,7 @@ public class IntegerSet {
      * Returns the smallest item in the set.
      *
      * @return The smallest integer in the set.
-     * @throws NoSuchElementException if the set is empty.
+     * @throws IntegerSetException if the set is empty.
      */
     public int smallest() throws IntegerSetException {
         if (set.isEmpty()) {
