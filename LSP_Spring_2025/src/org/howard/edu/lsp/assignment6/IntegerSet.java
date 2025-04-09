@@ -2,7 +2,7 @@ package org.howard.edu.lsp.assignment6;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
+
 
 /**
  * The IntegerSet class represents a set of integers.
