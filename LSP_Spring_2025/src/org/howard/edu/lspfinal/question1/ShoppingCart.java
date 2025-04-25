@@ -1,80 +1,78 @@
 package org.howard.edu.lspfinal.question1;
-//Reference used sources:
-//https://makoservernet/article/HTML-LSP/
-//https://www.w3schools.com/
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
- * Represents a simple shopping cart that allows adding items,
- * applying discount codes, and calculating the total cost.
+ * A simple shopping cart supporting add/remove items, 
+ * discount codes, and total cost calculation.
  */
 public class ShoppingCart {
-    private Map<String, Double> items = new HashMap<>();
-    private double discountPercentage = 0.0;
+    private final Map<String, Double> items = new HashMap<>();
+    private double discountPercent = 0.0;
 
     /**
-     * Adds an item to the shopping cart.
-     *
-     * @param itemName the name of the item (must be non-null, non-empty)
-     * @param price    the price of the item (must be > 0)
-     * @throws ShoppingCartException if itemName is null/empty or price <= 0
+     * Adds an item with a positive price.
+     * @param itemName must be non-null, non-empty
+     * @param price must be > 0
+     * @throws IllegalArgumentException for invalid name or price
      */
     public void addItem(String itemName, double price) {
         if (itemName == null || itemName.trim().isEmpty()) {
-            throw new ShoppingCartException("Item name cannot be null or empty.");
+            throw new IllegalArgumentException("Item name cannot be empty.");
         }
         if (price <= 0) {
-            throw new ShoppingCartException("Price must be greater than zero.");
+            throw new IllegalArgumentException(
+                price < 0 ? "Price cannot be negative." : "Price cannot be zero."
+            );
         }
         items.put(itemName, price);
     }
 
     /**
-     * Calculates and returns the total cost of the cart,
-     * applying any discounts currently in effect.
-     *
-     * @return total cost after applying discount
+     * Removes an item by name.
+     * @return true if present and removed, false otherwise
      */
-    public double getTotalCost() {
-        double total = 0.0;
-        for (double p : items.values()) {
-            total += p;
-        }
-        return total - (total * discountPercentage / 100.0);
+    public boolean removeItem(String itemName) {
+        return items.remove(itemName) != null;
     }
 
     /**
-     * Applies a valid discount code to the shopping cart.
-     * Supported codes:
-     * - "SAVE10": 10% discount
-     * - "SAVE20": 20% discount
-     *
-     * @param code the discount code
-     * @throws ShoppingCartException if the code is invalid
+     * @return sum(prices) minus any discount
      */
-    public void applyDiscountCode(String code) {
-        switch (code) {
+    public double calculateTotal() {
+        double sum = items.values().stream()
+                          .mapToDouble(Double::doubleValue)
+                          .sum();
+        return sum * (1 - discountPercent/100.0);
+    }
+
+    /**
+     * Supports only "SAVE10" or "SAVE20".
+     * @throws IllegalArgumentException otherwise
+     */
+    public void applyDiscount(String code) {
+        switch (Objects.requireNonNull(code, "Code cannot be null")) {
             case "SAVE10":
-                discountPercentage = 10.0;
+                discountPercent = 10;
                 break;
             case "SAVE20":
-                discountPercentage = 20.0;
+                discountPercent = 20;
                 break;
             default:
-                throw new ShoppingCartException("Invalid discount code.");
+                throw new IllegalArgumentException("Invalid discount code.");
         }
     }
 
-    /**
-     * Returns the current discount percentage applied to the cart.
-     * Useful for testing.
-     *
-     * @return the discount percentage (0.0 if no discount applied)
-     */
-    public double getDiscountPercentage() {
-        return discountPercentage;
+    /** @return current discount as a percentage */
+    public double getDiscount() {
+        return discountPercent;
+    }
+
+    /** @return number of items in cart */
+    public int getSize() {
+        return items.size();
     }
 }
 

@@ -1,110 +1,128 @@
 package org.howard.edu.lspfinal.question1;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ShoppingCartTest {
+@DisplayName("ShoppingCart — comprehensive validation")
+class ShoppingCartTest {
 
-    /**
-     * Test for adding valid item.
-     */
-    @Test
-    @DisplayName("Test for adding valid item")
-    void testAddValidItem() {
-        ShoppingCart cart = new ShoppingCart();
-        cart.addItem("Book", 15.0);
-        assertEquals(15.0, cart.getTotalCost());
+    private ShoppingCart cart;
+
+    @BeforeEach
+    void init() {
+        cart = new ShoppingCart();
     }
 
-    /**
-     * Test for adding item with 0 price (expect exception).
-     */
+    
+
     @Test
-    @DisplayName("Test for adding item with 0 price (expect exception)")
-    void testAddItemWithZeroPrice() {
-        ShoppingCart cart = new ShoppingCart();
-        assertThrows(ShoppingCartException.class,
-                     () -> cart.addItem("Freebie", 0.0));
+    @DisplayName("should add a valid item and update size & total")
+    void shouldAddValidItem() {
+        cart.addItem("Laptop", 999.99);
+        assertEquals(1, cart.getSize());
+        assertEquals(999.99, cart.calculateTotal(), 1e-6);
     }
 
-    /**
-     * Test for adding item with negative price (expect exception).
-     */
     @Test
-    @DisplayName("Test for adding item with negative price (expect exception)")
-    void testAddItemWithNegativePrice() {
-        ShoppingCart cart = new ShoppingCart();
-        assertThrows(ShoppingCartException.class,
-                     () -> cart.addItem("Faulty", -5.0));
+    @DisplayName("adding null or empty name throws exception")
+    void addingEmptyNameIsInvalid() {
+        IllegalArgumentException ex1 = assertThrows(
+            IllegalArgumentException.class,
+            () -> cart.addItem(null, 10.0)
+        );
+        assertEquals("Item name cannot be empty.", ex1.getMessage());
+
+        IllegalArgumentException ex2 = assertThrows(
+            IllegalArgumentException.class,
+            () -> cart.addItem("   ", 10.0)
+        );
+        assertEquals("Item name cannot be empty.", ex2.getMessage());
     }
 
-    /**
-     * Test for applying "SAVE10".
-     */
     @Test
-    @DisplayName("Test for applying \"SAVE10\"")
-    void testApplySave10() {
-        ShoppingCart cart = new ShoppingCart();
-        cart.applyDiscountCode("SAVE10");
-        assertEquals(10.0, cart.getDiscountPercentage());
+    @DisplayName("adding zero price throws zero-price exception")
+    void addingZeroPriceIsInvalid() {
+        IllegalArgumentException ex = assertThrows(
+            IllegalArgumentException.class,
+            () -> cart.addItem("Freebie", 0.0)
+        );
+        assertEquals("Price cannot be zero.", ex.getMessage());
     }
 
-    /**
-     * Test for applying "SAVE20".
-     */
     @Test
-    @DisplayName("Test for applying \"SAVE20\"")
-    void testApplySave20() {
-        ShoppingCart cart = new ShoppingCart();
-        cart.applyDiscountCode("SAVE20");
-        assertEquals(20.0, cart.getDiscountPercentage());
+    @DisplayName("adding negative price throws negative-price exception")
+    void addingNegativePriceIsInvalid() {
+        IllegalArgumentException ex = assertThrows(
+            IllegalArgumentException.class,
+            () -> cart.addItem("BadItem", -5.0)
+        );
+        assertEquals("Price cannot be negative.", ex.getMessage());
     }
 
-    /**
-     * Test for applying invalid code (expect exception).
-     */
+    
+
     @Test
-    @DisplayName("Test for applying invalid code (expect exception)")
-    void testApplyInvalidCode() {
-        ShoppingCart cart = new ShoppingCart();
-        assertThrows(ShoppingCartException.class,
-                     () -> cart.applyDiscountCode("SAVE50"));
+    @DisplayName("removing existing item returns true & decrements size")
+    void removeExistingItem() {
+        cart.addItem("Book", 20.0);
+        assertTrue(cart.removeItem("Book"));
+        assertEquals(0, cart.getSize());
     }
 
-    /**
-     * Test total cost without discount.
-     */
     @Test
-    @DisplayName("Test total cost without discount")
-    void testTotalCostWithoutDiscount() {
-        ShoppingCart cart = new ShoppingCart();
+    @DisplayName("removing non-existent item returns false & size unchanged")
+    void removeNonexistentItem() {
         cart.addItem("Pen", 2.0);
-        cart.addItem("Pencil", 1.0);
-        assertEquals(3.0, cart.getTotalCost());
+        assertFalse(cart.removeItem("Pencil"));
+        assertEquals(1, cart.getSize());
     }
 
-    /**
-     * Test total cost with discount.
-     */
+    // Total cost (no discount)
+
     @Test
-    @DisplayName("Test total cost with discount")
-    void testTotalCostWithDiscount() {
-        ShoppingCart cart = new ShoppingCart();
-        cart.addItem("Laptop", 1000.0);
-        cart.applyDiscountCode("SAVE20");
-        assertEquals(800.0, cart.getTotalCost());
+    @DisplayName("total is sum of prices without discount")
+    void totalWithoutDiscount() {
+        cart.addItem("Shirt", 25.0);
+        cart.addItem("Tie", 15.0);
+        assertEquals(40.0, cart.calculateTotal(), 1e-6);
     }
 
-    /**
-     * Test total cost with empty cart.
-     */
     @Test
-    @DisplayName("Test total cost with empty cart")
-    void testTotalCostEmptyCart() {
-        ShoppingCart cart = new ShoppingCart();
-        assertEquals(0.0, cart.getTotalCost());
+    @DisplayName("empty cart total is zero")
+    void emptyCartTotalIsZero() {
+        assertEquals(0.0, cart.calculateTotal(), 1e-6);
+    }
+
+    //  Discounts 
+
+    @Test
+    @DisplayName("apply SAVE10 sets 10% and affects total")
+    void applySAVE10() {
+        cart.addItem("Shoes", 50.0);
+        cart.applyDiscount("SAVE10");
+        assertEquals(10.0, cart.getDiscount(), 1e-6);
+        assertEquals(45.0, cart.calculateTotal(), 1e-6);
+    }
+
+    @Test
+    @DisplayName("apply SAVE20 sets 20% and affects total")
+    void applySAVE20() {
+        cart.addItem("Bag", 80.0);
+        cart.applyDiscount("SAVE20");
+        assertEquals(20.0, cart.getDiscount(), 1e-6);
+        assertEquals(64.0, cart.calculateTotal(), 1e-6);
+    }
+
+    @Test
+    @DisplayName("invalid discount code throws exception")
+    void invalidDiscountCode() {
+        IllegalArgumentException ex = assertThrows(
+            IllegalArgumentException.class,
+            () -> cart.applyDiscount("SAVE50")
+        );
+        assertEquals("Invalid discount code.", ex.getMessage());
     }
 }
-
